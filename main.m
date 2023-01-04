@@ -5,26 +5,34 @@ clear all; close all;
 dx = 0.5;
 dy = 0.5;
 
-w = 25; % width of an Olympic Games pool [m]
-l = 50; % length of an Olympic Games pool [m]
-d = 3; % depth from 2 to 3 [m] (3 [m] is suggested)
+w = 25;     % width of an Olympic Games pool [m]
+l = 50;     % length of an Olympic Games pool [m]
+d = 3;      % depth from 2 to 3 [m] (3 [m] is suggested)
 
 x = -l/2:dx:l/2;
 y = -w/2:dy:w/2;
 [xx,yy] = meshgrid(x,y);
 
-g = 9.81; % gravitational acceleration
+g = 9.81;   % gravitational acceleration
 c = 0.5;
 
 %% Source
-% position where the wave starts from
+% 1) 'point'  2) 'line'
+src_type = 'line';
+
+wave_h = 4;     % initial wave height
+% position where the wave starts from (point source)
 xsource = -15;  
 ysource = 2.5;
-wave_h = 4;  % initial wave height
-w_size = 2;
+w_size = 2;     % when point source the source dimensions are doubled 
 
-h = ones(size(xx))*d;
-h(xx >= -w_size+xsource & xx <= w_size+xsource & yy >= -w_size+ysource & yy <= w_size+ysource) = d + wave_h;
+if strcmp(src_type, 'point')
+    h = ones(size(xx))*d;
+    h(xx >= -w_size+xsource & xx <= w_size+xsource & yy >= -w_size+ysource & yy <= w_size+ysource) = d + wave_h;
+elseif strcmp(src_type, 'line')
+    h = ones(size(xx))*d;
+    h(xx <= -l/2 + w_size/2) = d + wave_h;
+end
 
 %% Initial surface
 % U is our unknown matrix. U(:,:,1)=h,U(:,:2)=hu,U(:,:,3)=hv
