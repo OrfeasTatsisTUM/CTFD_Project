@@ -1,4 +1,16 @@
-% FVM for shallow water equations
+%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ Main File ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Created by: Orfeas Emmanouil, Tatsis
+%             Fernando, Cruz Ceravalls
+%             Yuechen, Chen
+
+%% FINAL PROJECT
+%  TUM - Ass. Professorship for Thermo Fluid Dynamics
+%  WS022-023
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% This program models the waves in a swimming pool with Shallow Water
+% Equations using Finite Volume Methods
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; close all;
 
 %% Inputs
@@ -11,36 +23,7 @@ shiftp2 = circshift((1:length(y))',1);
 shiftm2 = circshift((1:length(y))',-1);
 
 %% Initial plot
-figure(1)
-for k = 1:2
-    subplot(1,2,k)
-    mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-    if k == 1
-        if lane_switch
-            for iii = 1:9
-                hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
-            end
-            hold off
-        end
-    end
-    set(gca,'DataAspectRatio',[1 1 0.4])
-    set(gcf, 'Position',[50,50,1800,800]);
-    if k==1
-        view(25,30);
-    else
-        view(0,0);
-    end
-    title('hit enter to continue')
-    text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
-    if k == 1
-        xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
-        ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
-    else
-        xlabel('x');
-    end
-    zlabel h;
-end
-pause;
+postprocess;
 
 %% Calculate
 Uplot = zeros(size(U));
@@ -107,8 +90,7 @@ while t < tstop
     store = store + 1;
 end
 
-clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 told tplot uold Uold vold ylh xlh
-
 %% Plots
 postprocess;
  
+clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 told tplot uold Uold vold ylh xlh k

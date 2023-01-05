@@ -1,4 +1,11 @@
 %% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Inputs File~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Created by: Orfeas Emmanouil, Tatsis
+%             Fernando, Cruz Ceravalls
+%             Yuechen, Chen
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this file, the user modifies the inputs of the model
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 %% Setup grid
 % node distances
@@ -20,8 +27,8 @@ c = 0.5;
 
 %% Source
 % Source Type
-% 1) 'point'  2) 'line'
-src_type = 'point';
+% 1) 'Point'  2) 'Line'
+src_type = 'Point';
 
 % initial wave height
 wave_h = 4;
@@ -31,10 +38,10 @@ xsource = -15;  % source x position
 ysource = 2.5;  % source y position
 w_size = 2;     % source size - when point source the source dimensions are doubled 
 
-if strcmp(src_type, 'point')
+if strcmp(src_type, 'Point')
     h = ones(size(xx))*d;
     h(xx >= -w_size+xsource & xx <= w_size+xsource & yy >= -w_size+ysource & yy <= w_size+ysource) = d + wave_h;
-elseif strcmp(src_type, 'line')
+elseif strcmp(src_type, 'Line')
     h = ones(size(xx))*d;
     h(xx <= -l/2 + w_size/2) = d + wave_h;
 end
@@ -54,19 +61,24 @@ ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];
 
-%% Floating cylinders
+%% Lane Lines
 lane_switch = true;
 % 1) true  2) false
-lane_num = 10;      % number of lanes
-lane_r = 0.075;     % radius of lanes [m]
+
 
 if lane_switch
+
+    lane_n = 10;        % Number of Lanes (Olympic Games pool lanes: 10)
+    lane_r = 0.075;     % Radius of Lanes [m]
+
     [xc, yc, zc]=cylinder(lane_r);
     zc(1,:)=-l/2; zc(2,:)=l/2;
-    xc = xc + 3;
-    iii =1;
-    for i=-4/5:1/5:4/5
-        ycall(:,:,iii) = yc - i*(w/2);
-        iii = iii +1;
+    xc = xc + d;
+    for i = 1:lane_n-1
+        l_n2 = lane_n/2;
+        cur_lane = linspace(-(l_n2-1)/(l_n2), (l_n2-1)/(l_n2), lane_n-1);
+        clear l_n2;
+        ycall(:,:,i) = yc - cur_lane(i)*(w/2);
     end
+
 end
