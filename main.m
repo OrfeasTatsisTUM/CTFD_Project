@@ -1,45 +1,8 @@
 % FVM for shallow water equations
-clear all; close all;
+clear; close all;
 
-%% Setup grid
-dx = 0.5;
-dy = 0.5;
-
-w = 25;     % width of an Olympic Games pool [m]
-l = 50;     % length of an Olympic Games pool [m]
-d = 3;      % depth from 2 to 3 [m] (3 [m] is suggested)
-
-x = -l/2:dx:l/2;
-y = -w/2:dy:w/2;
-[xx,yy] = meshgrid(x,y);
-
-g = 9.81;   % gravitational acceleration
-c = 0.5;
-
-%% Source
-% 1) 'point'  2) 'line'
-src_type = 'line';
-
-wave_h = 4;     % initial wave height
-% position where the wave starts from (point source)
-xsource = -15;  
-ysource = 2.5;
-w_size = 2;     % when point source the source dimensions are doubled 
-
-if strcmp(src_type, 'point')
-    h = ones(size(xx))*d;
-    h(xx >= -w_size+xsource & xx <= w_size+xsource & yy >= -w_size+ysource & yy <= w_size+ysource) = d + wave_h;
-elseif strcmp(src_type, 'line')
-    h = ones(size(xx))*d;
-    h(xx <= -l/2 + w_size/2) = d + wave_h;
-end
-
-%% Initial surface
-% U is our unknown matrix. U(:,:,1)=h,U(:,:2)=hu,U(:,:,3)=hv
-U = zeros([size(h) 3]);
-U(:,:,1) = h;
-u = zeros(size(xx));
-v = u;
+%% Inputs
+inputs
 
 %% Vectors for circular shift
 shiftp1 = circshift((1:length(x))',1);
@@ -49,32 +12,32 @@ shiftm2 = circshift((1:length(y))',-1);
 
 %% Initial plot
 figure(1)
-mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-set(gca,'DataAspectRatio',[1 1 0.4])
-set(gcf, 'Position',[100,50,1650,800]);
-view(25,30);            %view angle
-title('hit enter to continue')
-text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)],'VerticalAlignment','bottom')
-xlh = xlabel('x');
-xlh.Position(1) = xlh.Position(1) - 11;
-ylh = ylabel('y');
-ylh.Position(2) = xlh.Position(2) + 16.5;
-zlabel h;
+for k = 1:2
+    subplot(1,2,k)
+    mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+    set(gca,'DataAspectRatio',[1 1 0.4])
+    set(gcf, 'Position',[50,50,1800,800]);
+    if k==1
+        view(25,30);
+    else
+        view(0,0);
+    end
+    title('hit enter to continue')
+    text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
+    if k == 1
+        xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
+        ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
+    else
+        xlabel('x');
+    end
+    zlabel h;
+end
 pause;
 
-%% Time values
-t = 0;
-dt = 0;
-tstop = 10.0;
-ii = 1;
-numplots = 3;
-tplot = [1.35;3.0];
-
-Uplot = zeros([size(U)]);
-styles = {'k:','k--','k-'};
+%% Calculate
+Uplot = zeros(size(U));
 store = 1;
 
-%% Calculate
 while t < tstop
     Uold = U;
     uold = u;
@@ -83,13 +46,13 @@ while t < tstop
     t = t + dt;
     
     % calculate lambda = |u| + sqrt(gh) used for finding flux
-    lambdau = 0.5*abs(uold+uold(:,shiftm1)) +...
+    lamdau = 0.5*abs(uold+uold(:,shiftm1)) +...
         sqrt(g*0.5*(Uold(:,:,1)+Uold(:,shiftm1,1)));
-    lambdav = 0.5*abs(vold+vold(shiftm2,:)) +...
+    lamdav = 0.5*abs(vold+vold(shiftm2,:)) +...
         sqrt(g*0.5*(Uold(:,:,1)+Uold(shiftm2,:,1)));
-    lambdamax = norm([lambdau(:); lambdav(:)],Inf);
+    lamdamax = norm([lamdau(:); lamdav(:)],Inf);
     
-    dt = c*(dx/lambdamax);
+    dt = c*(dx/lamdamax);
     % adjust dt to produce plots at the right time
     if (ii<=length(tplot) && tplot(ii)>=told && tplot(ii)<=t+dt)
         dt = tplot(ii)-t;
@@ -106,9 +69,9 @@ while t < tstop
 
     % calculate fluxes
     fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
-        0.5*bsxfun(@times,Uold(:,shiftm1,:)-Uold,lambdau);
+        0.5*bsxfun(@times,Uold(:,shiftm1,:)-Uold,lamdau);
     fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - ...
-        0.5*bsxfun(@times,Uold(shiftm2,:,:)-Uold,lambdav);
+        0.5*bsxfun(@times,Uold(shiftm2,:,:)-Uold,lamdav);
 
     % time step
     U = Uold - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) ...
@@ -131,37 +94,12 @@ while t < tstop
     Uplot(:,:,store) = U(:,:,1);
     t_plot(store) = t+dt;
     max_h(store) = max(max(U(:,:,1)))-d;
+
+    d_plot(store) = (t>=tstop)*(d+0.6) + (store==1)*(d+0.6);
     store = store + 1;
 end
 
-%% Plot
-for i = 1:store-1
-    % display a movie of height
-    figure(1)
-    mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-    set(gca,'DataAspectRatio',[1 1 0.4])
-    view(25,30);            %view angle
-    title(['t = ' num2str(t_plot(i)) ])
-    xlh = xlabel('x');
-    xlh.Position(1) = xlh.Position(1) - 11;
-    ylh = ylabel('y');
-    ylh.Position(2) = xlh.Position(2) + 16.5;
-    zlabel h;
-    text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
-    pause(0.001)
-    set(gcf, 'Position',[100,50,1650,800]);
-end
+clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 told tplot uold Uold vold ylh xlh
 
-% for i = 1:store-1
-%     figure(2)
-%     s = pcolor(x,y,Uplot(:,:,i));
-%     colormap jet
-%     s.FaceColor = 'interp';
-%     axis equal
-%     axis([-l/2 l/2 -w/2 w/2])
-%     title(['t = ' num2str(t_plot(i))])
-%     xlabel('x')
-%     ylabel('y')
-%     pause(0.001)
-%     set(gcf, 'Position',[505,150,900,550]);
-% end
+%% Plots
+postprocess;
