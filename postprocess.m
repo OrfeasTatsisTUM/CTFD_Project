@@ -11,6 +11,11 @@ for i = 1:store-1
         if k == 1
             hold on
             plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
+            if lane_switch
+                for iii = 1:9
+                    hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+                end
+            end
         end
         hold off
         set(gca,'DataAspectRatio',[1 1 0.4])

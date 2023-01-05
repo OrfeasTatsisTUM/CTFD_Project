@@ -53,3 +53,20 @@ tstop = 10.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];
+
+%% Floating cylinders
+lane_switch = true;
+% 1) true  2) false
+lane_num = 10;      % number of lanes
+lane_r = 0.075;     % radius of lanes [m]
+
+if lane_switch
+    [xc, yc, zc]=cylinder(lane_r);
+    zc(1,:)=-l/2; zc(2,:)=l/2;
+    xc = xc + 3;
+    iii =1;
+    for i=-4/5:1/5:4/5
+        ycall(:,:,iii) = yc - i*(w/2);
+        iii = iii +1;
+    end
+end

@@ -15,6 +15,14 @@ figure(1)
 for k = 1:2
     subplot(1,2,k)
     mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+    if k == 1
+        if lane_switch
+            for iii = 1:9
+                hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+            end
+            hold off
+        end
+    end
     set(gca,'DataAspectRatio',[1 1 0.4])
     set(gcf, 'Position',[50,50,1800,800]);
     if k==1
@@ -103,3 +111,4 @@ clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 told tpl
 
 %% Plots
 postprocess;
+ 
