@@ -89,8 +89,10 @@ while t < tstop
     d_plot(store) = (t>=tstop)*(d+0.6) + (store==1)*(d+0.6);
     store = store + 1;
 end
+clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 
+clear told tplot uold Uold vold ii iii numplots  tplot
 
 %% Plots
 postprocess;
  
-clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1 told tplot uold Uold vold ylh xlh k
+clear ylh xlh k filename i im imind s cm store ycall xc zc

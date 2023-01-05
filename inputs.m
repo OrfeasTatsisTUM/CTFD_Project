@@ -77,8 +77,8 @@ if lane_switch
     for i = 1:lane_n-1
         l_n2 = lane_n/2;
         cur_lane = linspace(-(l_n2-1)/(l_n2), (l_n2-1)/(l_n2), lane_n-1);
-        clear l_n2;
         ycall(:,:,i) = yc - cur_lane(i)*(w/2);
     end
 
+    clear l_n2 cur_lane yc
 end
