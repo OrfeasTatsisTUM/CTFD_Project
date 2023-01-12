@@ -25,6 +25,56 @@ y = -w/2:dy:w/2;
 g = 9.81;   % gravitational acceleration
 c = 0.5;
 
+%% Wall shape
+if strcmp(mode, 'Simple')
+    % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
+    wall_type = 'Rounded';
+end
+base = 5;    % where the inclination starts
+factor = 0.1;  % inclination value
+
+if strcmp(mode, 'Check_Walls')
+    if loop == 1
+        wall_type = 'Flat';
+    elseif loop == 2
+        wall_type = 'Inclined';
+    elseif loop == 3
+        wall_type = 'Stairs';
+    else
+        wall_type = 'Rounded';
+    end
+end
+
+
+if strcmp(wall_type, 'Flat')
+    formfunction = @(xnorm, dim) 0;
+
+elseif strcmp(wall_type, 'Inclined')
+    formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) > dim - base);
+
+elseif strcmp(wall_type, 'Stairs')
+    % The steps are 3
+    steps_h = 0.8;  % step height & width (dx,dy =< steps_h =< d/3)
+
+        formfunction = @(xnorm, dim) (steps_h) * ...
+        ((abs(xnorm) >= dim - 3*steps_h) + (abs(xnorm)>= dim - 2*steps_h) + ...
+        (abs(xnorm) >= dim - steps_h));
+
+elseif strcmp(wall_type, 'Rounded')
+    order = 2;
+
+    formfunction = @(xnorm, dim) (factor*(abs(xnorm) - dim + base).^order) * (abs(xnorm) > dim - base) ;
+
+end
+
+bottom_h = zeros(size(xx));
+for  i=1:size(xx,2)
+    bottom_h(:,i) = bottom_h(:,i) + formfunction(xx(1,i), l/2);
+    for  j=1:size(xx,1)
+        if formfunction(yy(j,i),w/2)>bottom_h(j,i); bottom_h(j,i) = formfunction(yy(j,i),w/2); end
+    end
+end
+
 %% Source
 % Source Type
 % 1) 'Point'  2) 'Line'
@@ -46,6 +96,16 @@ elseif strcmp(src_type, 'Line')
     h(xx <= -l/2 + w_size/2) = d + wave_h;
 end
 
+for i=1:size(xx,1)
+    for j=1:size(xx,2)
+        if bottom_h(i,j) > h(i,j)
+            error(['Bottom goes above the water level. Wall type: '  wall_type])
+        end
+    end
+end
+
+h1 = h-bottom_h;
+
 %% Initial surface
 % U is our unknown matrix. U(:,:,1)=h,U(:,:2)=hu,U(:,:,3)=hv
 U = zeros([size(h) 3]);
@@ -60,6 +120,12 @@ tstop = 10.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];
+
+%% Vectors for circular shift
+shiftp1 = circshift((1:length(x))',1);
+shiftm1 = circshift((1:length(x))',-1);
+shiftp2 = circshift((1:length(y))',1);
+shiftm2 = circshift((1:length(y))',-1);
 
 %% Lane Lines
 lane_switch = true;
