@@ -62,7 +62,8 @@ while t < tstop
     store = store + 1;
 end
 
+% create matrix to plot the wall shapes
 if ~strcmp(wall_type, 'Flat')
-    bottom_plot = linspace(-l/2,l/2,store-1);
-    for  i=1:store-1; d_plot(i) = d_plot(i) + formfunction(bottom_plot(i),l/2); end
+    bottom_plot = linspace(-l/2,l/2,size(d_plot,2));
+    for  i=1:size(d_plot,2); d_plot(i) = d_plot(i) + formfunction(bottom_plot(i),l/2); end
 end
