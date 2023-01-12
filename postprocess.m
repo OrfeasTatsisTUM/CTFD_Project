@@ -32,7 +32,7 @@ if t == 0
         figure(1)
         for k = 1:2
             subplot(1,2,k)
-            mesh(x,y,U(:,:,1) + bottom_h(:,:)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+            mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
             if k == 1
                 if lane_switch
                     for iii = 1:lane_n-1

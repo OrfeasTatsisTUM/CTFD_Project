@@ -30,8 +30,8 @@ if strcmp(mode, 'Simple')
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
     wall_type = 'Rounded';
 end
-base = 5;    % where the inclination starts
-factor = 0.1;  % inclination value
+base = 4;    % where the inclination starts
+factor = 0.5;  % inclination value
 
 if strcmp(mode, 'Check_Walls')
     if loop == 1
@@ -61,7 +61,7 @@ elseif strcmp(wall_type, 'Stairs')
         (abs(xnorm) >= dim - steps_h));
 
 elseif strcmp(wall_type, 'Rounded')
-    order = 2;
+    order = 0.5;
 
     formfunction = @(xnorm, dim) (factor*(abs(xnorm) - dim + base).^order) * (abs(xnorm) > dim - base) ;
 

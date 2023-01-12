@@ -26,9 +26,9 @@ while t < tstop
     ghh = 0.5*g*Uold(:,:,1).^2;
 
     % calculate (hu,hu^2+gh^2/2,huv)
-    lffu = cat(3,Uold(:,:,2),Uold(:,:,2).^2./Uold(:,:,1)+ghh,huv);
+    lffu = cat(3,h1.*u,Uold(:,:,2).^2./Uold(:,:,1)+ghh,huv);
     % calcualte (hv,huv,hv^2+gh^2/2)
-    lffv = cat(3,Uold(:,:,3),huv,Uold(:,:,3).^2./Uold(:,:,1)+ghh);
+    lffv = cat(3,h1.*v,huv,Uold(:,:,3).^2./Uold(:,:,1)+ghh);
 
     % calculate fluxes
     fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
@@ -54,7 +54,7 @@ while t < tstop
     u = U(:,:,2)./U(:,:,1);   v = U(:,:,3)./U(:,:,1);
     
     %% store the values for plot
-    Uplot(:,:,store) = U(:,:,1)+bottom_h;
+    Uplot(:,:,store) = U(:,:,1);
     t_plot(store) = t+dt;
     max_h(store) = max(max(U(:,:,1)))-d;
     
@@ -64,5 +64,5 @@ end
 
 if ~strcmp(wall_type, 'Flat')
     bottom_plot = linspace(-l/2,l/2,store-1);
-    for  i=1:size(d_plot,2); d_plot(i) = d_plot(i) + formfunction(bottom_plot(i),l/2); end
+    for  i=1:store-1; d_plot(i) = d_plot(i) + formfunction(bottom_plot(i),l/2); end
 end
