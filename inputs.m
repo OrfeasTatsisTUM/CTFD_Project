@@ -27,7 +27,7 @@ y = -w/2:dy:w/2;
 [xx,yy] = meshgrid(x,y);
 
 g = 9.81;   % gravitational acceleration
-c = 0.5;
+c = 0.5;    % CFL safety constant
 
 %% Wall shape
 
@@ -35,8 +35,7 @@ if ~strcmp(mode, 'Check_Walls')
     
     % INSERT WALL TYPE
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
-    wall_type = 'Rounded';
-
+    wall_type = 'Inclined';
 
 
 else
@@ -59,7 +58,7 @@ elseif strcmp(wall_type, 'Inclined')
     base = 4;      % where the inclination starts
     factor = 0.5;  % inclination value
 
-    formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) > dim - base);
+    formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) >= dim - base);
 
 elseif strcmp(wall_type, 'Stairs')
     % The steps are 3
@@ -130,7 +129,7 @@ v = u;
 
 t = 0;          % initial time
 dt = 0;
-tstop = 10.0;   % max time value
+tstop = 20.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];

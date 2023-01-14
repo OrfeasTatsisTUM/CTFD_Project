@@ -66,9 +66,11 @@ else
 
 
     wall_plot = [-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2];
-    for i = 1:size(d_plot,2)-1
-        if (d_plot(i) ~= d_plot(i+1)) && strcmp(wall_type, 'Stairs')
-            wall_plot(i+1) = wall_plot(i);
+    if strcmp(wall_type, 'Stairs')
+        for i = 1:size(d_plot,2)-1
+            if (d_plot(i) ~= d_plot(i+1))
+                wall_plot(i+1) = wall_plot(i);
+            end
         end
     end
 
@@ -250,4 +252,17 @@ else
         if record; saveas(gcf,'Wall_Shape.jpg'); end
     end
     
+    figure(7)
+    plot(t_plot,avg_h,'DisplayName',wall_type);
+    if strcmp(mode, 'Check_Walls')
+        hold on
+        if loop==1
+            legend(wall_type)
+            set(gcf, 'Position',[50,50,1800,800]);
+        end
+    end
+    xlabel('t [s]');
+    ylabel ('Average wave height [m]');
+    if record; saveas(gcf,'Average_Wave_Height.jpg'); end
+
 end

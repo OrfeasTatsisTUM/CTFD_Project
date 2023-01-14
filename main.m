@@ -17,7 +17,7 @@ close all;
 %% Solution Mode
 % CHOOSE BETWEEN DIFFERENT SOLUTION MODES
 % 1) 'Simple', 2) 'Check_Walls', 3) 'Check_Lanes'
-mode = 'Simple';
+mode = 'Check_Walls';
 
 
 if strcmp(mode, 'Simple')           % SIMPLE MODE: Solves for one chosen Wall Shape and extracts the GIFs
@@ -44,6 +44,8 @@ elseif strcmp(mode, 'Check_Walls')   % CHECK_WALLS MODE: Solves for all differen
 
         %% Plots
         postprocess;
+
+        if loop ~=4; clearvars -except mode loop; end
     end
 
 end

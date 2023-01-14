@@ -7,9 +7,9 @@ while t < tstop
     
     % calculate lambda = |u| + sqrt(gh) used for finding flux
     lamdau = 0.5*abs(u+u(:,shiftm1)) +...
-        sqrt(g*0.5*(U(:,:,1)+U(:,shiftm1,1)));
+        sqrt(g*0.5*(h1(:,:)+h1(:,shiftm1)));
     lamdav = 0.5*abs(v+v(shiftm2,:)) +...
-        sqrt(g*0.5*(U(:,:,1)+U(shiftm2,:,1)));
+        sqrt(g*0.5*(h1(:,:)+h1(shiftm2,:)));
     lamdamax = norm([lamdau(:); lamdav(:)],Inf);
     
     dt = c*(dx/lamdamax);
@@ -23,9 +23,9 @@ while t < tstop
     ghh = 0.5*g*U(:,:,1).^2;
 
     % calculate (hu,hu^2+gh^2/2,huv)
-    lffu = cat(3,h1.*u,U(:,:,2).^2./U(:,:,1)+ghh,huv);
+    lffu = cat(3,h1.*u,U(:,:,2).^2./U(:,:,1)+ghh,huv); % F(V)
     % calcualte (hv,huv,hv^2+gh^2/2)
-    lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh);
+    lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh); % G(V)
 
     % calculate fluxes
     fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
@@ -54,7 +54,8 @@ while t < tstop
     Uplot(:,:,store) = U(:,:,1);
     t_plot(store) = t+dt;
     max_h(store) = max(max(U(:,:,1)))-d;
-    
+    avg_h(store) = mean(mean(abs(U(:,:,1))-d));
+
     d_plot(store) = (t>=tstop)*(d+0.6) + (store==1)*(d+0.6);
     store = store + 1;
 end
