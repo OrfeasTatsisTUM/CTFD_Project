@@ -7,6 +7,10 @@
 % In this file, the user modifies the inputs of the model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
+% Record the plots to GIFs & JPGs
+% 1)true, 2)false
+record = false;
+
 %% Setup grid
 % node distances
 dx = 0.5;
