@@ -9,7 +9,7 @@
 
 % Record the plots to GIFs & JPGs
 % 1)true, 2)false
-record = false;
+record = true;
 
 %% Setup grid
 % node distances
@@ -129,7 +129,7 @@ v = u;
 
 t = 0;          % initial time
 dt = 0;
-tstop = 20.0;   % max time value
+tstop = 10.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];

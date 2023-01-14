@@ -238,6 +238,7 @@ else
             set(gcf, 'Position',[50,50,1800,800]);
         end
     end
+    xlim([0 tstop]);
     xlabel('t [s]');
     ylabel ('Max wave height [m]');
     if record; saveas(gcf,'Max_Wave_Height.jpg'); end
@@ -261,6 +262,7 @@ else
             set(gcf, 'Position',[50,50,1800,800]);
         end
     end
+    xlim([0 tstop]);
     xlabel('t [s]');
     ylabel ('Average wave height [m]');
     if record; saveas(gcf,'Average_Wave_Height.jpg'); end
