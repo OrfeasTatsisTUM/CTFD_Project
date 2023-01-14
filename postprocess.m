@@ -30,185 +30,201 @@ if t == 0
     end
 
     %% Initial plot
-%     if strcmp(mode, 'Simple')
-%         figure(1)
-%         for k = 1:2
-%             subplot(1,2,k)
-%             mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-%             if k == 1
-%                 if lane_switch
-%                     for iii = 1:lane_n-1
-%                         hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
-%                     end
-%                     hold off
-%                 end
-%             end
-%             set(gca,'DataAspectRatio',[1 1 0.4])
-%             set(gcf, 'Position',[50,50,1800,800]);
-%             if k==1
-%                 view(25,30);
-%             else
-%                 view(0,0);
-%             end
-%             title('hit enter to continue')
-%             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
-%             if k == 1
-%                 xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
-%                 ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
-%             else
-%                 xlabel('x');
-%             end
-%             zlabel h;
-%         end
-%         pause;
-%     end
+    %     if strcmp(mode, 'Simple')
+    %         figure(1)
+    %         for k = 1:2
+    %             subplot(1,2,k)
+    %             mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+    %             if k == 1
+    %                 if lane_switch
+    %                     for iii = 1:lane_n-1
+    %                         hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+    %                     end
+    %                     hold off
+    %                 end
+    %             end
+    %             set(gca,'DataAspectRatio',[1 1 0.4])
+    %             set(gcf, 'Position',[50,50,1800,800]);
+    %             if k==1
+    %                 view(25,30);
+    %             else
+    %                 view(0,0);
+    %             end
+    %             title('hit enter to continue')
+    %             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
+    %             if k == 1
+    %                 xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
+    %                 ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
+    %             else
+    %                 xlabel('x');
+    %             end
+    %             zlabel h;
+    %         end
+    %         pause;
+    %     end
 else
+
+
+    wall_plot = [-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2];
+    for i = 1:size(d_plot,2)-1
+        if (d_plot(i) ~= d_plot(i+1)) && strcmp(wall_type, 'Stairs')
+            wall_plot(i+1) = wall_plot(i);
+        end
+    end
 
     %% Final plots
     if strcmp(mode, 'Simple')
-        
-%         filename = 'Both_plots.gif';
-%         for i = 1:store-1
-% 
-%             % display a movie of height
-%             figure(1)
-%             for k=1:2
-%                 subplot(1,2,k)
-%                 mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-%                 hold on
-%                 plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
-%                 if k == 1
-%                     hold on
-%                     plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
-%                     if lane_switch
-%                         for iii = 1:lane_n-1
-%                             hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
-%                         end
-%                     end
-%                 end
-%                 hold off
-%                 set(gca,'DataAspectRatio',[1 1 0.4])
-%                 if k==1
-%                     view(25,30);
-%                 else
-%                     view(0,0);
-%                 end
-%                 title(['t = ' num2str(t_plot(i))  ' [s]'])
-%                 if k == 1
-%                     xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
-%                     ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
-%                 else
-%                     xlabel('x');
-%                 end
-%                 zlabel h;
-%                 text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i)) ' [m]'],'VerticalAlignment','bottom')
-%                 pause(0.001)
-%                 set(gcf, 'Position',[50,50,1800,800]);
-%             end
-% 
-%             %Record into a GIF
-%             drawnow
-%             frame= getframe(gcf);
-%             im= frame2im(frame);
-%             [imind,cm] = rgb2ind(im,64);
-%             if i == 1
-%                 imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-%             else
-%                 imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-%             end
-%         end
 
-            filename = '3D.gif';
-            for i = 1:store-1
-        
-                % display a movie of height
-                figure(2)
-                mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-                hold on
-                plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
-                hold on
-                plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
-                if lane_switch
-                    for iii = 1:lane_n-1
-                        hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
-                    end
-                end
-                hold off
-                set(gca,'DataAspectRatio',[1 1 0.4])
-                view(25,30);
-                title(['t = ' num2str(t_plot(i))  ' [s]'])
-                xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
-                ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
-                zlabel h;
-                text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
-                pause(0.001)
-                set(gcf, 'Position',[50,50,1800,800]);
-        
-                %Record into a GIF
-                drawnow
-                frame= getframe(gcf);
-                im= frame2im(frame);
-                [imind,cm] = rgb2ind(im,64);
-                if i == 1
-                    imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-                else
-                    imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-                end
-            end
-
-            filename = '2D_xz.gif';
-            for i = 1:store-1
-                figure(3)
-                mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-                hold on
-                plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
-                hold off
-                set(gca,'DataAspectRatio',[1 1 0.4])
-                view(0,0);            %view angle
-                title(['t = ' num2str(t_plot(i))  ' [s]'])
-                xlabel('x');
-                zlabel h;
-                text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
-                pause(0.001)
-                set(gcf, 'Position',[50,50,1800,800]);
-        
-                %Record into a GIF
-                drawnow
-                frame= getframe(gcf);
-                im= frame2im(frame);
-                [imind,cm] = rgb2ind(im,64);
-                if i == 1
-                    imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-                else
-                    imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-                end
-            end
-
-        %     filename = '2D_xy.gif';
-        %     for i = 1:store-1
-        %         figure(4)
-        %         s = pcolor(x,y,Uplot(:,:,i));
-        %         colormap jet
-        %         s.FaceColor = 'interp';
-        %         axis equal
-        %         axis([-l/2 l/2 -w/2 w/2])
-        %         title(['t = ' num2str(t_plot(i))])
-        %         xlabel('x')
-        %         ylabel('y')
-        %         pause(0.001)
-        %         set(gcf, 'Position',[50,50,1800,800]);
+        %         if record; filename = 'Both_plots.gif'; end
+        %         for i = 1:store-1
         %
-        %         %Record into a GIF
-        %         drawnow
-        %         frame= getframe(gcf);
-        %         im= frame2im(frame);
-        %         [imind,cm] = rgb2ind(im,64);
-        %         if i == 1
-        %             imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-        %         else
-        %             imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+        %             % display a movie of height
+        %             figure(1)
+        %             for k=1:2
+        %                 subplot(1,2,k)
+        %                 mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+        %                 hold on
+        %                 plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+        %                 if k == 1
+        %                     hold on
+        %                     plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
+        %                     if lane_switch
+        %                         for iii = 1:lane_n-1
+        %                             hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+        %                         end
+        %                     end
+        %                 end
+        %                 hold off
+        %                 set(gca,'DataAspectRatio',[1 1 0.4])
+        %                 if k==1
+        %                     view(25,30);
+        %                 else
+        %                     view(0,0);
+        %                 end
+        %                 title(['t = ' num2str(t_plot(i))  ' [s]'])
+        %                 if k == 1
+        %                     xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
+        %                     ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
+        %                 else
+        %                     xlabel('x');
+        %                 end
+        %                 zlabel h;
+        %                 text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i)) ' [m]'],'VerticalAlignment','bottom')
+        %                 pause(0.001)
+        %                 set(gcf, 'Position',[50,50,1800,800]);
+        %             end
+        %
+        %             if record
+        %                 %Record into a GIF
+        %                 drawnow
+        %                 frame= getframe(gcf);
+        %                 im= frame2im(frame);
+        %                 [imind,cm] = rgb2ind(im,64);
+        %                 if i == 1
+        %                     imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        %                 else
+        %                     imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+        %                 end
+        %             end
         %         end
-        %     end
+
+
+        if record; filename = '3D.gif'; end
+        for i = 1:store-1
+
+            % display a movie of height
+            figure(2)
+            mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+            hold on
+            plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+            hold on
+            plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
+            if lane_switch
+                for iii = 1:lane_n-1
+                    hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+                end
+            end
+            hold off
+            set(gca,'DataAspectRatio',[1 1 0.4])
+            view(25,30);
+            title(['t = ' num2str(t_plot(i))  ' [s]'])
+            xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
+            ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
+            zlabel h;
+            text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
+            pause(0.001)
+            set(gcf, 'Position',[50,50,1800,800]);
+
+            if record
+                %Record into a GIF
+                drawnow
+                frame= getframe(gcf);
+                im= frame2im(frame);
+                [imind,cm] = rgb2ind(im,64);
+                if i == 1
+                    imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+                else
+                    imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+                end
+            end
+        end
+
+        if record; filename = '2D_xz.gif'; end
+        for i = 1:store-1
+            figure(3)
+            mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+            hold on
+            plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+            hold off
+            set(gca,'DataAspectRatio',[1 1 0.4])
+            view(0,0);            %view angle
+            title(['t = ' num2str(t_plot(i))  ' [s]'])
+            xlabel('x');
+            zlabel h;
+            text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
+            pause(0.001)
+            set(gcf, 'Position',[50,50,1800,800]);
+
+            if record
+                %Record into a GIF
+                drawnow
+                frame= getframe(gcf);
+                im= frame2im(frame);
+                [imind,cm] = rgb2ind(im,64);
+                if i == 1
+                    imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+                else
+                    imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+                end
+            end
+        end
+
+        %         if record; filename = '2D_xy.gif';
+        %             for i = 1:store-1
+        %                 figure(4)
+        %                 s = pcolor(x,y,Uplot(:,:,i));
+        %                 colormap jet
+        %                 s.FaceColor = 'interp';
+        %                 axis equal
+        %                 axis([-l/2 l/2 -w/2 w/2])
+        %                 title(['t = ' num2str(t_plot(i))])
+        %                 xlabel('x')
+        %                 ylabel('y')
+        %                 pause(0.001)
+        %                 set(gcf, 'Position',[50,50,1800,800]);
+        %
+        %                 if record
+        %                     drawnow
+        %                     frame= getframe(gcf);
+        %                     im= frame2im(frame);
+        %                     [imind,cm] = rgb2ind(im,64);
+        %                     if i == 1
+        %                         imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        %                     else
+        %                         imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+        %                     end
+        %                 end
+        %             end
     end
 
     figure(5)
@@ -222,15 +238,16 @@ else
     end
     xlabel('t [s]');
     ylabel ('Max wave height [m]');
-    saveas(gcf,'Max_Wave_Height.jpg')
+    if record; saveas(gcf,'Max_Wave_Height.jpg'); end
 
     if strcmp(mode, 'Check_Walls')
         figure(6)
         subplot(4,1,loop)
-        plot([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],d_plot,'LineWidth',1.5);
+        plot(wall_plot,d_plot,'LineWidth',1.5);
         xlim([0 l/2]); ylim([0 d])
         set(gcf, 'Position',[50,50,900,900]);
         title(wall_type)
+        if record; saveas(gcf,'Wall_Shape.jpg'); end
     end
-
+    
 end

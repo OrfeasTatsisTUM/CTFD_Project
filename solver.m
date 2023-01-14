@@ -2,17 +2,14 @@ Uplot = zeros(size(U));
 store = 1;
 
 while t < tstop
-    Uold = U;
-    uold = u;
-    vold = v;
     told = t;
     t = t + dt;
     
     % calculate lambda = |u| + sqrt(gh) used for finding flux
-    lamdau = 0.5*abs(uold+uold(:,shiftm1)) +...
-        sqrt(g*0.5*(Uold(:,:,1)+Uold(:,shiftm1,1)));
-    lamdav = 0.5*abs(vold+vold(shiftm2,:)) +...
-        sqrt(g*0.5*(Uold(:,:,1)+Uold(shiftm2,:,1)));
+    lamdau = 0.5*abs(u+u(:,shiftm1)) +...
+        sqrt(g*0.5*(U(:,:,1)+U(:,shiftm1,1)));
+    lamdav = 0.5*abs(v+v(shiftm2,:)) +...
+        sqrt(g*0.5*(U(:,:,1)+U(shiftm2,:,1)));
     lamdamax = norm([lamdau(:); lamdav(:)],Inf);
     
     dt = c*(dx/lamdamax);
@@ -22,22 +19,22 @@ while t < tstop
         ii = ii + 1;
     end
     
-    huv = Uold(:,:,2).*Uold(:,:,3)./Uold(:,:,1);
-    ghh = 0.5*g*Uold(:,:,1).^2;
+    huv = U(:,:,2).*U(:,:,3)./U(:,:,1);
+    ghh = 0.5*g*U(:,:,1).^2;
 
     % calculate (hu,hu^2+gh^2/2,huv)
-    lffu = cat(3,h1.*u,Uold(:,:,2).^2./Uold(:,:,1)+ghh,huv);
+    lffu = cat(3,h1.*u,U(:,:,2).^2./U(:,:,1)+ghh,huv);
     % calcualte (hv,huv,hv^2+gh^2/2)
-    lffv = cat(3,h1.*v,huv,Uold(:,:,3).^2./Uold(:,:,1)+ghh);
+    lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh);
 
     % calculate fluxes
     fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
-        0.5*bsxfun(@times,Uold(:,shiftm1,:)-Uold,lamdau);
+        0.5*(U(:,shiftm1,:)-U).*lamdau;
     fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - ...
-        0.5*bsxfun(@times,Uold(shiftm2,:,:)-Uold,lamdav);
+        0.5*(U(shiftm2,:,:)-U).*lamdav;
 
     % time step
-    U = Uold - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) ...
+    U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) ...
         - (dt/dy)*(fluxy - fluxy(shiftp2,:,:));
     
     %% Impose boundary conditions on h
