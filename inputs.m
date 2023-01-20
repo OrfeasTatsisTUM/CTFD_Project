@@ -57,14 +57,14 @@ elseif strcmp(wall_type, 'Inclined')
     formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) >= dim - base);
    
 elseif strcmp(wall_type, 'Stairs')
-    % The steps are 3
-    height = 1; %in m
-    distance = 1; %in m
-    step_h = height/3; step_d = (distance*2)/3; %adjusting values to the model
 
-    formfunction = @(xnorm, dim) step_h * ...
-        ((abs(xnorm) >= dim - 3*step_d) + (abs(xnorm)>= dim - 2*step_d) + ...
-        (abs(xnorm) >= dim - step_d));
+    step_height = 2; %in m
+    step_dis = 2; %in m
+    step_num = 5; % step number
+    step_h = step_height/step_num; step_d = (step_dis*2)/step_num; %adjusting values to the model
+
+
+    formfunction = @(xnorm, dim) sum(step_h * ((abs(xnorm) >= dim - [1:step_num]*step_d)));
 
 elseif strcmp(wall_type, 'Rounded')
     base = 2;      % where the inclination starts

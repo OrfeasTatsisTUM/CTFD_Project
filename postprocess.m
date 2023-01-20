@@ -64,6 +64,10 @@ if t == 0
 %     end
 else
 
+    bottom_l=[-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2];
+    for i=2:size(bottom_l,2)-1
+        if strcmp(wall_type, 'Stairs') && d_plot(i)~=d_plot(i-1); bottom_l(i)=bottom_l(i-1); end
+    end
     %% Final plots
     if strcmp(mode, 'Simple')
         
@@ -76,7 +80,7 @@ else
 %                 subplot(1,2,k)
 %                 mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
 %                 hold on
-%                 plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+%                 plot3(bottom_l,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
 %                 if k == 1
 %                     hold on
 %                     plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
@@ -125,7 +129,7 @@ else
                 figure(2)
                 mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
                 hold on
-                plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+                plot3(bottom_l,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
                 hold on
                 plot3(zeros(size(d_plot)),[-w/2,linspace(-w/2,w/2,size(d_plot,2)-2),w/2],d_plot,'k','LineWidth',1.5)
                 if lane_switch
@@ -161,7 +165,7 @@ else
                 figure(3)
                 mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
                 hold on
-                plot3([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+                plot3(bottom_l,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
                 hold off
                 set(gca,'DataAspectRatio',[1 1 0.4])
                 view(0,0);            %view angle
@@ -227,7 +231,7 @@ else
     if strcmp(mode, 'Check_Walls')
         figure(6)
         subplot(4,1,loop)
-        plot([-l/2,linspace(-l/2,l/2,size(d_plot,2)-2),l/2],d_plot,'LineWidth',1.5);
+        plot(bottom_l,d_plot,'LineWidth',1.5);
         xlim([0 l/2]); ylim([0 d])
         set(gcf, 'Position',[50,50,900,900]);
         title(wall_type)
