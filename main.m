@@ -52,4 +52,4 @@ end
 
 clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1
 clear told tplot uold Uold vold ii iii numplots  tplot
-clear ylh xlh k filename i im imind s cm ycall xc zc
+clear ylh xlh k filename i im imind s cm xc zc

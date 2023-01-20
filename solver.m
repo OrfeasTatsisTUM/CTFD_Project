@@ -24,6 +24,7 @@ while t < tstop
     lffu = cat(3,h1.*u,U(:,:,2).^2./U(:,:,1)+ghh,huv); % F(V)
     % calcualte (hv,huv,hv^2+gh^2/2)
     lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh); % G(V)
+    S = cat(3, 0, 1000, 1000);
 
     % calculate fluxes
     fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - 0.5*(U(:,shiftm1,:)-U).*lamdau;
