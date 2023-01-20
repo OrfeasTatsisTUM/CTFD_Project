@@ -145,7 +145,7 @@ shiftm2 = circshift((1:length(y))',-1);
 
 % SWITCH ON/OFF THE FLOATING LINES
 % 1) true  2) false
-lane_switch = false;
+lane_switch = true;
 
 if lane_switch
 

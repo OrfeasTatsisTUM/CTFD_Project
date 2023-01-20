@@ -171,62 +171,63 @@ else
             end
         end
 
-        if record; filename = '2D_xz.gif'; end
-        for i = 1:store-1
-            figure(3)
-            mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-            hold on
-            plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
-            hold off
-            set(gca,'DataAspectRatio',[1 1 0.4])
-            view(0,0);            %view angle
-            title(['t = ' num2str(t_plot(i))  ' [s]'])
-            xlabel('x');
-            zlabel h;
-            text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
-            pause(0.001)
-            set(gcf, 'Position',[50,50,1800,800]);
+%         if record; filename = '2D_xz.gif'; end
+%         for i = 1:store-1
+%             figure(3)
+%             mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+%             hold on
+%             plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+%             hold off
+%             set(gca,'DataAspectRatio',[1 1 0.4])
+%             view(0,0);            %view angle
+%             title(['t = ' num2str(t_plot(i))  ' [s]'])
+%             xlabel('x');
+%             zlabel h;
+%             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
+%             pause(0.001)
+%             set(gcf, 'Position',[50,50,1800,800]);
+% 
+%             if record
+%                 Record into a GIF
+%                 drawnow
+%                 frame= getframe(gcf);
+%                 im= frame2im(frame);
+%                 [imind,cm] = rgb2ind(im,64);
+%                 if i == 1
+%                     imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+%                 else
+%                     imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+%                 end
+%             end
+%         end
 
-            if record
-                %Record into a GIF
-                drawnow
-                frame= getframe(gcf);
-                im= frame2im(frame);
-                [imind,cm] = rgb2ind(im,64);
-                if i == 1
-                    imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-                else
-                    imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+                if record; filename = '2D_xy.gif';
+                    for i = 1:store-1
+                        figure(4)
+                        s = pcolor(x,y,Uplot(:,:,i));
+                        colormap jet
+                        s.FaceColor = 'interp';
+                        axis equal
+                        axis([-l/2 l/2 -w/2 w/2])
+                        title(['t = ' num2str(t_plot(i))])
+                        xlabel('x')
+                        ylabel('y')
+                        pause(0.001)
+                        set(gcf, 'Position',[50,50,1800,800]);
+        
+                        if record
+                            drawnow
+                            frame= getframe(gcf);
+                            im= frame2im(frame);
+                            [imind,cm] = rgb2ind(im,64);
+                            if i == 1
+                                imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+                            else
+                                imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+                            end
+                        end
+                    end
                 end
-            end
-        end
-
-        %         if record; filename = '2D_xy.gif';
-        %             for i = 1:store-1
-        %                 figure(4)
-        %                 s = pcolor(x,y,Uplot(:,:,i));
-        %                 colormap jet
-        %                 s.FaceColor = 'interp';
-        %                 axis equal
-        %                 axis([-l/2 l/2 -w/2 w/2])
-        %                 title(['t = ' num2str(t_plot(i))])
-        %                 xlabel('x')
-        %                 ylabel('y')
-        %                 pause(0.001)
-        %                 set(gcf, 'Position',[50,50,1800,800]);
-        %
-        %                 if record
-        %                     drawnow
-        %                     frame= getframe(gcf);
-        %                     im= frame2im(frame);
-        %                     [imind,cm] = rgb2ind(im,64);
-        %                     if i == 1
-        %                         imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-        %                     else
-        %                         imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-        %                     end
-        %                 end
-        %             end
     end
 
     figure(5)

@@ -6,10 +6,8 @@ while t < tstop
     t = t + dt;
     
     % calculate lambda = |u| + sqrt(gh) used for finding flux
-    lamdau = 0.5*abs(u+u(:,shiftm1)) +...
-        sqrt(g*0.5*(h1(:,:)+h1(:,shiftm1)));
-    lamdav = 0.5*abs(v+v(shiftm2,:)) +...
-        sqrt(g*0.5*(h1(:,:)+h1(shiftm2,:)));
+    lamdau = 0.5*abs(u+u(:,shiftm1)) + sqrt(g*0.5*(h1(:,:)+h1(:,shiftm1)));
+    lamdav = 0.5*abs(v+v(shiftm2,:)) + sqrt(g*0.5*(h1(:,:)+h1(shiftm2,:)));
     lamdamax = norm([lamdau(:); lamdav(:)],Inf);
     
     dt = c*(dx/lamdamax);
@@ -28,14 +26,11 @@ while t < tstop
     lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh); % G(V)
 
     % calculate fluxes
-    fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
-        0.5*(U(:,shiftm1,:)-U).*lamdau;
-    fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - ...
-        0.5*(U(shiftm2,:,:)-U).*lamdav;
+    fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - 0.5*(U(:,shiftm1,:)-U).*lamdau;
+    fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - 0.5*(U(shiftm2,:,:)-U).*lamdav;
 
     % time step
-    U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) ...
-        - (dt/dy)*(fluxy - fluxy(shiftp2,:,:));
+    U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) - (dt/dy)*(fluxy - fluxy(shiftp2,:,:));
     
     %% Impose boundary conditions on h
     U(1:end,end,1) =  U(1:end,end-1,1); U(1:end,1,1) =  U(1:end,2,1);
