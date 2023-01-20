@@ -7,10 +7,6 @@
 % In this file, the user modifies the inputs of the model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Record the plots to GIFs & JPGs
-% 1)true, 2)false
-record = true;
-
 %% Setup grid
 % node distances
 dx = 0.5;
@@ -27,7 +23,7 @@ y = -w/2:dy:w/2;
 [xx,yy] = meshgrid(x,y);
 
 g = 9.81;   % gravitational acceleration
-c = 0.5;    % CFL safety constant
+c = 0.5;
 
 %% Wall shape
 
@@ -35,9 +31,7 @@ if ~strcmp(mode, 'Check_Walls')
     
     % INSERT WALL TYPE
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
-    wall_type = 'Inclined';
-
-
+    wall_type = 'Rounded';
 else
     if loop == 1
         wall_type = 'Flat';
@@ -55,22 +49,26 @@ if strcmp(wall_type, 'Flat')
     formfunction = @(xnorm, dim) 0;
 
 elseif strcmp(wall_type, 'Inclined')
-    base = 4;      % where the inclination starts
+    
+    base = 2;      % where the inclination starts
     factor = 0.5;  % inclination value
-
+  
+    
     formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) >= dim - base);
-
+   
 elseif strcmp(wall_type, 'Stairs')
     % The steps are 3
-    steps_h = 0.8;  % step height & width (dx,dy =< steps_h =< d/3)
+    height = 1; %in m
+    distance = 1; %in m
+    step_h = height/3; step_d = (distance*2)/3; %adjusting values to the model
 
-    formfunction = @(xnorm, dim) (steps_h) * ...
-        ((abs(xnorm) >= dim - 3*steps_h) + (abs(xnorm)>= dim - 2*steps_h) + ...
-        (abs(xnorm) >= dim - steps_h));
+    formfunction = @(xnorm, dim) step_h * ...
+        ((abs(xnorm) >= dim - 3*step_d) + (abs(xnorm)>= dim - 2*step_d) + ...
+        (abs(xnorm) >= dim - step_d));
 
 elseif strcmp(wall_type, 'Rounded')
-    base = 3.5;      % where the inclination starts
-    factor = 0.1;    % inclination value
+    base = 2;      % where the inclination starts
+    factor= 0.1;    % inclination value
     order = 2;
 
     formfunction = @(xnorm, dim) (factor*(abs(xnorm) - dim + base).^order) * (abs(xnorm) >= dim - base) ;
@@ -81,7 +79,9 @@ bottom_h = zeros(size(xx));  % bottom_h: distance from flat bottom
 for  i=1:size(xx,2)
     bottom_h(:,i) = bottom_h(:,i) + formfunction(xx(1,i), l/2);
     for  j=1:size(xx,1)
-        if formfunction(yy(j,i),w/2)>bottom_h(j,i); bottom_h(j,i) = formfunction(yy(j,i),w/2); end
+        if formfunction(yy(j,i),w/2)>bottom_h(j,i); 
+            bottom_h(j,i) = formfunction(yy(j,i),w/2); 
+        end
     end
 end
 
@@ -89,7 +89,7 @@ end
 
 % INSERT SOURCE TYPE
 % 1) 'Point'  2) 'Line'
-src_type = 'Point';
+src_type = 'Line';
 
 wave_h = 4;     % initial wave height
 
@@ -145,7 +145,7 @@ shiftm2 = circshift((1:length(y))',-1);
 
 % SWITCH ON/OFF THE FLOATING LINES
 % 1) true  2) false
-lane_switch = false;
+lane_switch = true;
 
 if lane_switch
 

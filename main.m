@@ -44,10 +44,9 @@ elseif strcmp(mode, 'Check_Walls')   % CHECK_WALLS MODE: Solves for all differen
 
         %% Plots
         postprocess;
-
-        if loop ~=4; clearvars -except mode loop; end
+         
     end
-
+clear;
 end
 
 clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1
