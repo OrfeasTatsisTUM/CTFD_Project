@@ -7,7 +7,7 @@
 % In this file, the user modifies the inputs of the model
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-% Record the plots to GIFs & JPGs
+% CHOOSE IF THE PLOTS ARE SAVED INTO GIFs & JPGs
 % 1)true, 2)false
 record = true;
 
@@ -36,7 +36,6 @@ if ~strcmp(mode, 'Check_Walls')
     % INSERT WALL TYPE
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
     wall_type = 'Inclined';
-
 
 else
     if loop == 1
@@ -68,7 +67,7 @@ elseif strcmp(wall_type, 'Stairs')
     step_num = 5; % step number
     
     % dim = either l/2 or w/2
-    step_h = step_height/step_num; step_d = (step_dis*2)/step_num; %adjusting values to the model
+    step_h = step_height/step_num; step_d = (step_dis*2)/step_num;   %adjusting values to the model
     formfunction = @(xnorm, dim) sum(step_h * ((abs(xnorm) >= dim - [1:step_num]*step_d)));
 
 elseif strcmp(wall_type, 'Rounded')
@@ -88,7 +87,7 @@ end
 
 %% Source
 
-% INSERT SOURCE TYPE
+% CHOOSE SOURCE TYPE
 % 1) 'Point'  2) 'Line'
 src_type = 'Point';
 
@@ -130,7 +129,7 @@ v = u;
 
 t = 0;          % initial time
 dt = 0;
-tstop = 10.0;   % max time value
+tstop = 100.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];
@@ -143,10 +142,21 @@ shiftp2 = circshift((1:length(y))',1);
 shiftm2 = circshift((1:length(y))',-1);
 
 %% Floating Lane Lines
+% They are not working correctly
 
-% SWITCH ON/OFF THE FLOATING LINES
-% 1) true  2) false
-lane_switch = true;
+if ~strcmp(mode, 'Check_Lanes')
+
+    % SWITCH ON/OFF THE FLOATING LINES
+    % 1) true  2) false
+    lane_switch = false;
+
+else
+    if loop == 1
+        lane_switch = true;
+    else
+        lane_switch = false;
+    end
+end
 
 if lane_switch
 
@@ -176,6 +186,5 @@ if lane_switch
         lane_pos(lane_save(i),:) = 1;
     end
 
-
-%     clear l_n2 cur_lane yc
+    clear l_n2 cur_lane yc lane_save grid_distnew grid_dist
 end

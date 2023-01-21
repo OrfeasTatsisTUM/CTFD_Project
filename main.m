@@ -8,8 +8,10 @@
 %  WS022-023
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This program models the waves in a swimming pool with Shallow Water
-% Equations using Finite Volume Methods
+% This program is modeling different kind of waves in a swimming pool using
+% Shallow Water Equations and applying them with the Lax-Friedrich Method. 
+% The scope of the program is to evaluate what influence has the depth and 
+% the wall shape of the pool on the waves
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 clear; 
 close all;
@@ -17,7 +19,7 @@ close all;
 %% Solution Mode
 % CHOOSE BETWEEN DIFFERENT SOLUTION MODES
 % 1) 'Simple', 2) 'Check_Walls', 3) 'Check_Lanes'
-mode = 'Check_Walls';
+mode = 'Simple';
 
 
 if strcmp(mode, 'Simple')           % SIMPLE MODE: Solves for one chosen Wall Shape and extracts the GIFs
@@ -48,8 +50,23 @@ elseif strcmp(mode, 'Check_Walls')   % CHECK_WALLS MODE: Solves for all differen
         if loop ~=4; clearvars -except mode loop; end
     end
 
+elseif strcmp(mode, 'Check_Lanes')  % floating lines are wrong
+
+    for loop=1:2  % 1: Lanes ON, 2: Lanes OFF
+        %% Inputs
+        inputs;
+
+        %% Calculate
+        solver;
+
+        %% Plots
+        postprocess;
+
+        if loop == 1; clearvars -except mode loop; end
+    end
+
 end
 
 clear dt fluxx fluxy i ii lamdau lamdav shiftp2 shiftm2 shiftm1 shiftp1
 clear told tplot uold Uold vold ii iii numplots  tplot
-clear ylh xlh k filename i im imind s cm xc zc
+clear ylh xlh k filename i im imind s cm

@@ -4,8 +4,10 @@
 %             Yuechen, Chen
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% This file visualises the outputs of the calculation
+% This file visualises the outputs of the solution file
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
 set(0,'defaultfigurecolor',[1 1 1])
 
 if t == 0
@@ -171,73 +173,82 @@ else
             end
         end
 
-%         if record; filename = '2D_xz.gif'; end
-%         for i = 1:store-1
-%             figure(3)
-%             mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-%             hold on
-%             plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
-%             hold off
-%             set(gca,'DataAspectRatio',[1 1 0.4])
-%             view(0,0);            %view angle
-%             title(['t = ' num2str(t_plot(i))  ' [s]'])
-%             xlabel('x');
-%             zlabel h;
-%             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
-%             pause(0.001)
-%             set(gcf, 'Position',[50,50,1800,800]);
-% 
-%             if record
-%                 Record into a GIF
-%                 drawnow
-%                 frame= getframe(gcf);
-%                 im= frame2im(frame);
-%                 [imind,cm] = rgb2ind(im,64);
-%                 if i == 1
-%                     imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-%                 else
-%                     imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-%                 end
-%             end
-%         end
+        %         if record; filename = '2D_xz.gif'; end
+        %         for i = 1:store-1
+        %             figure(3)
+        %             mesh(x,y,Uplot(:,:,i)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+        %             hold on
+        %             plot3(wall_plot,zeros(size(d_plot)),d_plot,'k','LineWidth',1.5)
+        %             hold off
+        %             set(gca,'DataAspectRatio',[1 1 0.4])
+        %             view(0,0);            %view angle
+        %             title(['t = ' num2str(t_plot(i))  ' [s]'])
+        %             xlabel('x');
+        %             zlabel h;
+        %             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(max_h(i))],'VerticalAlignment','bottom')
+        %             pause(0.001)
+        %             set(gcf, 'Position',[50,50,1800,800]);
+        %
+        %             if record
+        %                 Record into a GIF
+        %                 drawnow
+        %                 frame= getframe(gcf);
+        %                 im= frame2im(frame);
+        %                 [imind,cm] = rgb2ind(im,64);
+        %                 if i == 1
+        %                     imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        %                 else
+        %                     imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+        %                 end
+        %             end
+        %         end
 
-                if record; filename = '2D_xy.gif';
-                    for i = 1:store-1
-                        figure(4)
-                        s = pcolor(x,y,Uplot(:,:,i));
-                        colormap jet
-                        s.FaceColor = 'interp';
-                        axis equal
-                        axis([-l/2 l/2 -w/2 w/2])
-                        title(['t = ' num2str(t_plot(i))])
-                        xlabel('x')
-                        ylabel('y')
-                        pause(0.001)
-                        set(gcf, 'Position',[50,50,1800,800]);
-        
-                        if record
-                            drawnow
-                            frame= getframe(gcf);
-                            im= frame2im(frame);
-                            [imind,cm] = rgb2ind(im,64);
-                            if i == 1
-                                imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
-                            else
-                                imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
-                            end
-                        end
-                    end
-                end
+        %         if record; filename = '2D_xy.gif'; end
+        %         for i = 1:store-1
+        %             figure(4)
+        %             s = pcolor(x,y,Uplot(:,:,i));
+        %             colormap jet
+        %             s.FaceColor = 'interp';
+        %             axis equal
+        %             axis([-l/2 l/2 -w/2 w/2])
+        %             title(['t = ' num2str(t_plot(i))])
+        %             xlabel('x')
+        %             ylabel('y')
+        %             pause(0.001)
+        %             set(gcf, 'Position',[50,50,1800,800]);
+        %
+        %             if record
+        %                 drawnow
+        %                 frame= getframe(gcf);
+        %                 im= frame2im(frame);
+        %                 [imind,cm] = rgb2ind(im,64);
+        %                 if i == 1
+        %                     imwrite(imind,cm,filename,'gif', 'Loopcount',inf);
+        %                 else
+        %                     imwrite(imind,cm,filename,'gif','WriteMode','append','DelayTime',0);
+        %                 end
+        %             end
+        %         end
+
     end
 
     figure(5)
-    plot(t_plot,max_h,'DisplayName',wall_type);
     if strcmp(mode, 'Check_Walls')
+        plot(t_plot,max_h,'DisplayName',wall_type);
         hold on
         if loop==1
             legend(wall_type)
             set(gcf, 'Position',[50,50,1800,800]);
         end
+    elseif strcmp(mode, 'Check_Lanes')
+        plot(t_plot,max_h,'DisplayName',['Lanes Enabled:  ' num2str(lane_switch)]);
+        hold on
+        if loop==1
+            legend(['Lanes Enabled:  ' num2str(lane_switch)])
+            set(gcf, 'Position',[50,50,1800,800]);
+        end
+    else
+        plot(t_plot,max_h,'DisplayName',wall_type);
     end
     xlim([0 tstop]);
     xlabel('t [s]');
@@ -253,15 +264,25 @@ else
         title(wall_type)
         if record; saveas(gcf,'Wall_Shape.jpg'); end
     end
-    
+
     figure(7)
-    plot(t_plot,avg_h,'DisplayName',wall_type);
+    
     if strcmp(mode, 'Check_Walls')
+        plot(t_plot,avg_h,'DisplayName',wall_type);
         hold on
         if loop==1
             legend(wall_type)
             set(gcf, 'Position',[50,50,1800,800]);
         end
+    elseif strcmp(mode, 'Check_Lanes')
+        plot(t_plot,avg_h,'DisplayName',['Lanes Enabled:  ' num2str(lane_switch)]);
+        hold on
+        if loop==1
+            legend(['Lanes Enabled:  ' num2str(lane_switch)])
+            set(gcf, 'Position',[50,50,1800,800]);
+        end
+    else
+        plot(t_plot,avg_h,'DisplayName',wall_type);
     end
     xlim([0 tstop]);
     xlabel('t [s]');
