@@ -35,7 +35,7 @@ if ~strcmp(mode, 'Check_Walls')
     
     % INSERT WALL TYPE
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
-    wall_type = 'Inclined';
+    wall_type = 'Rounded';
 
 else
     if loop == 1
@@ -89,7 +89,7 @@ end
 
 % CHOOSE SOURCE TYPE
 % 1) 'Point'  2) 'Line'
-src_type = 'Point';
+src_type = 'Line';
 
 wave_h = 4;     % initial wave height
 

@@ -74,4 +74,6 @@ clear ylh xlh k filename i im imind s cm
 fprintf('Validation process:\n%s');
 fprintf('Initial Water Volume:\t\t %d [m3] \n',Val(1));
 fprintf('Volume Coeficient of Variation:\t %.4f %% \n',(std(Val)/mean(Val))*100);
-fprintf('Extreme volume variation:\t %.2f [m3] \n',max(Val)-min(Val));
+fprintf('Volume Maximum Variation:\t %.2f [m3] | %.4f %% \n',max(Val)-min(Val),(max(Val)-min(Val))/mean(Val)*100);
+NRMSE = sqrt(mean((Val-mean(Val)).^2))/mean(Val)*100;
+fprintf('Normalized Root Mean Square Error: %.4f %% \n',NRMSE);
