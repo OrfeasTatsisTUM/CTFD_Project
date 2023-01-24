@@ -1,15 +1,23 @@
+%% ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Solution File~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+% Created by: Orfeas Emmanouil, Tatsis
+%             Fernando, Cruz Ceravalls
+%             Yuechen, Chen
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% In this file, the model is solved using the Lax-Friedrich method
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
 Uplot = zeros(size(U));
 store = 1;
+Val = []; %validation array
 
 while t < tstop
     told = t;
     t = t + dt;
     
     % calculate lambda = |u| + sqrt(gh) used for finding flux
-    lamdau = 0.5*abs(u+u(:,shiftm1)) +...
-        sqrt(g*0.5*(h1(:,:)+h1(:,shiftm1)));
-    lamdav = 0.5*abs(v+v(shiftm2,:)) +...
-        sqrt(g*0.5*(h1(:,:)+h1(shiftm2,:)));
+    lamdau = 0.5*abs(u+u(:,shiftm1)) + sqrt(g*0.5*(h1(:,:)+h1(:,shiftm1)));
+    lamdav = 0.5*abs(v+v(shiftm2,:)) + sqrt(g*0.5*(h1(:,:)+h1(shiftm2,:)));
     lamdamax = norm([lamdau(:); lamdav(:)],Inf);
     
     dt = c*(dx/lamdamax);
@@ -27,16 +35,21 @@ while t < tstop
     % calcualte (hv,huv,hv^2+gh^2/2)
     lffv = cat(3,h1.*v,huv,U(:,:,3).^2./U(:,:,1)+ghh); % G(V)
 
+    if lane_switch % wrong
+        S = cat(3, zeros(size(yy)), lane_r/100*(g+1)*lane_pos, lane_r/100*(g+1)*lane_pos);
+    end
+
     % calculate fluxes
-    fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - ...
-        0.5*(U(:,shiftm1,:)-U).*lamdau;
-    fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - ...
-        0.5*(U(shiftm2,:,:)-U).*lamdav;
+    fluxx =  0.5*(lffu+lffu(:,shiftm1,:)) - 0.5*(U(:,shiftm1,:)-U).*lamdau;
+    fluxy =  0.5*(lffv+lffv(shiftm2,:,:)) - 0.5*(U(shiftm2,:,:)-U).*lamdav;
 
     % time step
-    U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) ...
-        - (dt/dy)*(fluxy - fluxy(shiftp2,:,:));
-    
+    if lane_switch
+        U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) - (dt/dy)*(fluxy - fluxy(shiftp2,:,:)) + dt*S;  % wrong
+    else
+        U = U - (dt/dx)*(fluxx - fluxx(:,shiftp1,:)) - (dt/dy)*(fluxy - fluxy(shiftp2,:,:));
+    end
+
     %% Impose boundary conditions on h
     U(1:end,end,1) =  U(1:end,end-1,1); U(1:end,1,1) =  U(1:end,2,1);
     U(end,1:end,1) =  U(end-1,1:end,1); U(1,1:end,1) =  U(2,1:end,1);
@@ -49,6 +62,11 @@ while t < tstop
     
     % u = hu./h;            % v = hv./h;
     u = U(:,:,2)./U(:,:,1);   v = U(:,:,3)./U(:,:,1);
+    
+    %%Validation process
+    %h(x,y,t) * dx * dy we must take into consideration the nodes and multiplz so that we get the [m] unitary
+    
+    Val = [Val;trapz(trapz(U(:,:,1)))*(dy*dx)]; %[m]
     
     %% store the values for plot
     Uplot(:,:,store) = U(:,:,1);
