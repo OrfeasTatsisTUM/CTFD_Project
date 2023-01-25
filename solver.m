@@ -9,6 +9,7 @@
 
 Uplot = zeros(size(U));
 store = 1;
+Val = []; %validation array
 
 while t < tstop
     told = t;
@@ -62,7 +63,7 @@ while t < tstop
     % u = hu./h;            % v = hv./h;
     u = U(:,:,2)./U(:,:,1);   v = U(:,:,3)./U(:,:,1);
     
-    %% Validation process
+    %% Validation process (mass conservation)
     %h(x,y,t) * dx * dy we must take into consideration the nodes and multiplz so that we get the [m] unitary
     
     Val = [Val;trapz(trapz(U(:,:,1)))*(dy*dx)]; %[m]
