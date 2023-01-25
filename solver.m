@@ -62,7 +62,12 @@ while t < tstop
     % u = hu./h;            % v = hv./h;
     u = U(:,:,2)./U(:,:,1);   v = U(:,:,3)./U(:,:,1);
     
-    %% store the values for plot
+    %% Validation process
+    %h(x,y,t) * dx * dy we must take into consideration the nodes and multiplz so that we get the [m] unitary
+    
+    Val = [Val;trapz(trapz(U(:,:,1)))*(dy*dx)]; %[m]
+    
+    %% Store the values for plot
     Uplot(:,:,store) = U(:,:,1);
     t_plot(store) = t+dt;
     max_h(store) = max(max(U(:,:,1)))-d;
