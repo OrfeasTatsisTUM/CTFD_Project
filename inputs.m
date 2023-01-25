@@ -19,7 +19,9 @@ dy = 0.5;
 % pool dimensions (Olympic Games pool: 25x50x3)
 w = 25;     % width of an Olympic Games pool [m]
 l = 50;     % length of an Olympic Games pool [m]
-d = 3;      % depth from 2 to 3 [m] (3 [m] is suggested)
+if ~strcmp(mode, 'Check_Depth')
+    d = 3;      % depth from 2 to 3 [m] (3 [m] is suggested)
+end
 
 % create grid
 x = -l/2:dx:l/2;
@@ -31,12 +33,16 @@ c = 0.5;    % CFL safety constant
 
 %% Wall shape
 
-if ~strcmp(mode, 'Check_Walls')
+if strcmp(mode, 'Simple')
     
     % INSERT WALL TYPE
     % 1) 'Flat',  2) 'Inclined', 3) 'Stairs', 4) 'Rounded'
     wall_type = 'Inclined';
 
+elseif strcmp(mode, 'Check_Depth')
+    wall_type = 'Flat';
+elseif strcmp(mode, 'Check_Incl')
+    wall_type = 'Inclined';
 else
     if loop == 1
         wall_type = 'Flat';
@@ -54,8 +60,8 @@ if strcmp(wall_type, 'Flat')
     formfunction = @(xnorm, dim) 0;
 
 elseif strcmp(wall_type, 'Inclined')
-    base = 4;      % where the inclination starts
-    factor = 0.5;  % inclination value
+        base = 4;      % where the inclination starts
+        factor = 0.5;  % inclination value
 
     % dim = either l/2 or w/2
     formfunction = @(xnorm, dim) abs(factor*(abs(xnorm) - dim + base)) * (abs(xnorm) >= dim - base);
@@ -129,7 +135,7 @@ v = u;
 
 t = 0;          % initial time
 dt = 0;
-tstop = 100.0;   % max time value
+tstop = 15.0;   % max time value
 ii = 1;
 numplots = 3;
 tplot = [1.35;3.0];

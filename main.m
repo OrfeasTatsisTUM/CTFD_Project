@@ -18,7 +18,9 @@ close all;
 
 %% Solution Mode
 % CHOOSE BETWEEN DIFFERENT SOLUTION MODES
-% 1) 'Simple', 2) 'Check_Walls', 3) 'Check_Lanes'
+% 1) 'Simple', 2) 'Check_Walls', 3) 'Check_Lanes', 4)'Check_Depth'
+% Check Lanes doesn't work
+% 'Check
 mode = 'Simple';
 
 
@@ -63,6 +65,21 @@ elseif strcmp(mode, 'Check_Lanes')  % floating lines are wrong
         postprocess;
 
         if loop == 1; clearvars -except mode loop; end
+    end
+
+elseif strcmp(mode, 'Check_Depth')   % CHECK_DEPTHS MODE: Solves for differnt pool depths
+
+    for d=1:2:5 
+        %% Inputs
+        inputs;
+
+        %% Calculate
+        solver;
+
+        %% Plots
+        postprocess;
+
+        if d ~=5; clearvars -except mode loop; end
     end
 
 end

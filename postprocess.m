@@ -32,38 +32,38 @@ if t == 0
     end
 
     %% Initial plot
-    %     if strcmp(mode, 'Simple')
-    %         figure(1)
-    %         for k = 1:2
-    %             subplot(1,2,k)
-    %             mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
-    %             if k == 1
-    %                 if lane_switch
-    %                     for iii = 1:lane_n-1
-    %                         hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
-    %                     end
-    %                     hold off
-    %                 end
-    %             end
-    %             set(gca,'DataAspectRatio',[1 1 0.4])
-    %             set(gcf, 'Position',[50,50,1800,800]);
-    %             if k==1
-    %                 view(25,30);
-    %             else
-    %                 view(0,0);
-    %             end
-    %             title('hit enter to continue')
-    %             text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
-    %             if k == 1
-    %                 xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
-    %                 ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
-    %             else
-    %                 xlabel('x');
-    %             end
-    %             zlabel h;
-    %         end
-    %         pause;
-    %     end
+%         if strcmp(mode, 'Simple')
+%             figure(1)
+% %             for k = 1:2
+% %                 subplot(1,2,k)
+%                 mesh(x,y,U(:,:,1)), colormap jet, axis([-l/2 l/2 -w/2 w/2 0 d+wave_h])
+% %                 if k == 1
+%                     if lane_switch
+%                         for iii = 1:lane_n-1
+%                             hold on, s = surf(zc,ycall(:,:,iii),xc); set(s,'edgecolor','none','facecolor','g')
+%                         end
+%                         hold off
+%                     end
+% %                 end
+%                 set(gca,'DataAspectRatio',[1 1 0.4])
+%                 set(gcf, 'Position',[50,50,1800,800]);
+% %                 if k==1
+%                     view(25,30);
+% %                 else
+% %                     view(0,0);
+% %                 end
+%                 title('hit enter to continue')
+%                 text(-l/2, -w/2, 0, ['  Max Wave Height = ' num2str(wave_h)  ' [m]'],'VerticalAlignment','bottom')
+% %                 if k == 1
+%                     xlh = xlabel('x');   xlh.Position(1) = xlh.Position(1) - 11;
+%                     ylh = ylabel('y');   ylh.Position(2) = xlh.Position(2) + 16.5;
+% %                 else
+% %                     xlabel('x');
+% %                 end
+%                 zlabel h;
+% %             end
+%             pause;
+%         end
 else
 
 
@@ -247,6 +247,13 @@ else
             legend(['Lanes Enabled:  ' num2str(lane_switch)])
             set(gcf, 'Position',[50,50,1800,800]);
         end
+    elseif strcmp(mode, 'Check_Depth')
+        plot(t_plot,max_h,'DisplayName',['Depth: ' num2str(d)]);
+        hold on
+        if d==1
+            legend(['Depth: ' num2str(d)])
+            set(gcf, 'Position',[50,50,1800,800]);
+        end
     else
         plot(t_plot,max_h,'DisplayName',wall_type);
     end
@@ -279,6 +286,13 @@ else
         hold on
         if loop==1
             legend(['Lanes Enabled:  ' num2str(lane_switch)])
+            set(gcf, 'Position',[50,50,1800,800]);
+        end
+    elseif strcmp(mode, 'Check_Depth')
+        plot(t_plot,avg_h,'DisplayName',['Depth: ' num2str(d)]);
+        hold on
+        if d==1
+            legend(['Depth: ' num2str(d)])
             set(gcf, 'Position',[50,50,1800,800]);
         end
     else
